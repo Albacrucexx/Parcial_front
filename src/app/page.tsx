@@ -7,10 +7,11 @@ import CocktailCard from "./components/cocktail";
 import { useRouter } from "next/navigation";
 
 const Home = () => {
+  const [search, setSearch] = useState("");
   const [cocktails, setCocktails] = useState<Cocktail[]>([]);
   const router = useRouter();
 
-  // cargar margaritas al inicio
+  // CARGAR MARGARITAS AL INICIO
   useEffect(() => {
     const loadCocktails = async () => {
       const data = await searchCocktailByName("margarita");
@@ -19,6 +20,11 @@ const Home = () => {
 
     loadCocktails();
   }, []);
+
+  const handleSearch = async () => {
+    const data = await searchCocktailByName(search);
+    setCocktails(data || []);
+  };
 
   const handleRandom = async () => {
     const cocktail = await getRandomCocktail();
@@ -30,6 +36,19 @@ const Home = () => {
       <h1>Buscador de Cocktails</h1>
 
       <div className="searchContainer">
+        <div className="searchBox">
+          <input
+            type="text"
+            placeholder="Buscar cocktail..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <button className="searchBtn" onClick={handleSearch}>
+            Buscar
+          </button>
+        </div>
+
         <button className="randomBtn" onClick={handleRandom}>
           Dime algo bonito
         </button>
